@@ -1,6 +1,6 @@
 # VulnaaS API
 
-API used to will make security tests inside a CI.
+API used by VulnaaS.
 
 ## Getting Started
 
