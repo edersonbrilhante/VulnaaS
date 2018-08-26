@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/VulnaaS/VulnaaS-API/api"
-	apiContext "github.com/VulnaaS/VulnaaS-API/context"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -15,9 +15,7 @@ func main() {
 
 	fmt.Println("[*] Starting VulnaaS-API...")
 
-	apiConfig := apiContext.GetAPIConfig()
-
-	if err := checkAPIRequirements(apiConfig); err != nil {
+	if err := checkAPIRequirements(); err != nil {
 		fmt.Println("[x] Error starting VulnaaS-API:")
 		fmt.Println("[x]", err)
 		os.Exit(1)
@@ -31,19 +29,17 @@ func main() {
 	echoInstance.Use(middleware.RequestID())
 
 	echoInstance.GET("/healthcheck", api.HealthCheck)
-	echoInstance.GET("/custom-configs/local/:id", api.ReceiveRequest)
-	echoInstance.GET("/custom-configs/remote/:id", api.ReceiveRequest)
-	echoInstance.GET("/searchsploit-configs/local/:id", api.ReceiveRequest)
-	echoInstance.GET("/searchsploit-configs/remote/:id", api.ReceiveRequest)
+	echoInstance.GET("/install/:id", api.ReceiveInstallRequest)
+	echoInstance.GET("/scripts/:pm/:id", api.GetScript)
 
-	vulnaasAPIPort := fmt.Sprintf(":%d", apiConfig.APIPort)
+	vulnaasAPIPort := fmt.Sprintf(":%d", getAPIPort())
 	echoInstance.Logger.Fatal(echoInstance.Start(vulnaasAPIPort))
 }
 
-func checkAPIRequirements(apiConfig *apiContext.APIConfig) error {
+func checkAPIRequirements() error {
 
 	// check if all environment variables are properly set.
-	if err := checkEnvVars(apiConfig); err != nil {
+	if err := checkEnvVars(); err != nil {
 		return err
 	}
 
@@ -52,14 +48,10 @@ func checkAPIRequirements(apiConfig *apiContext.APIConfig) error {
 	return nil
 }
 
-func checkEnvVars(apiConfig *apiContext.APIConfig) error {
+func checkEnvVars() error {
 	envVars := []string{
-		"MONGO_HOST",
-		"MONGO_DATABASE_NAME",
-		"MONGO_DATABASE_USERNAME",
-		"MONGO_DATABASE_PASSWORD",
-		// "MONGO_PORT", optional -> default value (27017)
-		// "MONGO_TIMEOUT", optional -> default value (60s)
+		"API_HOST",
+		"API_PORT",
 	}
 	var envIsSet bool
 	var allEnvIsSet bool
@@ -78,4 +70,12 @@ func checkEnvVars(apiConfig *apiContext.APIConfig) error {
 		return errors.New(finalError)
 	}
 	return nil
+}
+
+func getAPIPort() int {
+	apiPort, err := strconv.Atoi(os.Getenv("API_PORT"))
+	if err != nil {
+		apiPort = 9999
+	}
+	return apiPort
 }
