@@ -14,13 +14,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 #### Setting up environment variables (use your own configuration):
 
-Don't forget to change this password!
-
 ```
-echo 'export MONGO_HOST="192.168.50.5"' >> .env
-echo 'export MONGO_DATABASE_NAME="vulnaasDB"' >> .env
-echo 'export MONGO_DATABASE_USERNAME="vulnaas"' >> .env
-echo 'export MONGO_DATABASE_PASSWORD="superENVPassword"' >> .env
+echo 'export API_HOST="192.168.50.1"' >> .env
+echo 'export API_PORT="9999"' >> .env
 ```
 
 ```
@@ -31,15 +27,13 @@ source .env
 
 `go run server.go`
 
-Set `:shell, path:` to point to VulnaaS-API, as shown on the example bellow:
+Set `:shell, path:` into your Vagrantfile to point to VulnaaS-API, as shown on the example bellow:
 
 ```
 config.vm.define "vm-example" do |vm1|
+    config.vm.network :private_network, ip: "192.168.50.10"
     vm1.vm.provision :shell, path: "http:localhost:9999/custom-configs/local/1001.sh", privileged: true
   end
 ```
 
 ## Architecture draft
-
-## MongoDB draft
-
