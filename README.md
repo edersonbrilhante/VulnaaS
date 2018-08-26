@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* Golang: `brew insall golang` 
+* Golang: `brew install golang` 
 
 ## Installing
 
@@ -25,6 +25,18 @@ echo 'export MONGO_DATABASE_PASSWORD="superENVPassword"' >> .env
 
 ```
 source .env
+```
+
+## Running 
+
+`go run server.go`
+
+Set `:shell, path:` to point to VulnaaS-API, as shown on the example bellow:
+
+```
+config.vm.define "vm-example" do |vm1|
+    vm1.vm.provision :shell, path: "http:localhost:9999/custom-configs/local/1001.sh", privileged: true
+  end
 ```
 
 ## Architecture draft
