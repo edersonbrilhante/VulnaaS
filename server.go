@@ -31,6 +31,10 @@ func main() {
 	echoInstance.Use(middleware.RequestID())
 
 	echoInstance.GET("/healthcheck", api.HealthCheck)
+	echoInstance.GET("/custom-configs/local/:id", api.ReceiveRequest)
+	echoInstance.GET("/custom-configs/remote/:id", api.ReceiveRequest)
+	echoInstance.GET("/searchsploit-configs/local/:id", api.ReceiveRequest)
+	echoInstance.GET("/searchsploit-configs/remote/:id", api.ReceiveRequest)
 
 	vulnaasAPIPort := fmt.Sprintf(":%d", apiConfig.APIPort)
 	echoInstance.Logger.Fatal(echoInstance.Start(vulnaasAPIPort))
