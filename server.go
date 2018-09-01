@@ -7,19 +7,29 @@ import (
 	"strconv"
 
 	"github.com/VulnaaS/VulnaaS-API/api"
+	"github.com/VulnaaS/VulnaaS-API/config"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/spf13/viper"
 )
 
 func main() {
 
-	fmt.Println("[*] Starting VulnaaS-API...")
+	fmt.Println("[*] Starting VulnaaS...")
 
-	if err := checkAPIRequirements(); err != nil {
-		fmt.Println("[x] Error starting VulnaaS-API:")
-		fmt.Println("[x]", err)
-		os.Exit(1)
+	checkAPIRequirements()
+
+	// loading viper
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	if err := viper.ReadInConfig(); err != nil {
+		vulnaasError(err)
 	}
+	if err := viper.Unmarshal(&config.VulnaasConfig); err != nil {
+		vulnaasError(err)
+	}
+
+	fmt.Println("[*] Viper loaded: OK!")
 
 	echoInstance := echo.New()
 	echoInstance.HideBanner = true
@@ -30,22 +40,17 @@ func main() {
 
 	echoInstance.GET("/healthcheck", api.HealthCheck)
 	echoInstance.GET("/install/:id", api.ReceiveInstallRequest)
-	echoInstance.GET("/scripts/:pm/:id", api.GetScript)
+	echoInstance.GET("/scripts/:pm/:id", api.InstallScript)
 
 	vulnaasAPIPort := fmt.Sprintf(":%d", getAPIPort())
 	echoInstance.Logger.Fatal(echoInstance.Start(vulnaasAPIPort))
 }
 
-func checkAPIRequirements() error {
-
-	// check if all environment variables are properly set.
+func checkAPIRequirements() {
 	if err := checkEnvVars(); err != nil {
-		return err
+		vulnaasError(err)
 	}
-
 	fmt.Println("[*] Environment Variables: OK!")
-
-	return nil
 }
 
 func checkEnvVars() error {
@@ -78,4 +83,10 @@ func getAPIPort() int {
 		apiPort = 9999
 	}
 	return apiPort
+}
+
+func vulnaasError(err error) {
+	fmt.Println("[x] Error starting VulnaaS:")
+	fmt.Println("[x]", err)
+	os.Exit(1)
 }
