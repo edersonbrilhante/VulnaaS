@@ -1,0 +1,64 @@
+checkPackageManagerScript:
+  unixCmd: |+ 
+      #!/bin/bash
+      which yum 1> /dev/null 
+      if [ $? -eq 0 ]; then
+        # curl to API to get yum based scripts.
+        curl -s http://%API_HOST%:%API_PORT%/scripts/yum/%SCRIPT_ID% | sh
+      else
+        # curl to API to get apt-get based scripts.
+        curl -s http://%API_HOST%:%API_PORT%/scripts/apt/%SCRIPT_ID% | sh
+      fi
+  windowsCmd: |+ 
+    PS1 script would
+    go here
+
+vulnaasScripts: 
+  - installScript: 
+    id: 1001
+    title: Script Teste
+    author: Autor1
+    date: Today
+    platform: Linux
+    exploitDB: 1023
+    cmdYum: |+
+      #!/bin/bash
+      echo "Need to run yum!"
+    cmdApt: |+
+      #!/bin/bash
+      echo "Need to run apt!"
+    cmdWindows: dir
+
+  - installScript: 
+    id: 1002
+    title: Script Teste2
+    author: Autor2
+    date: Today2
+    platform: Linux2
+    exploitDB: 1024
+    cmdYum: yum install
+    cmdApt: apt install
+    cmdWindows: dir
+
+serviceScripts:
+  - installScript:
+    id: 2002
+    title: Script Teste3
+    author: Autor3
+    date: Today3
+    platform: Linux3
+    exploitDB: 10232
+    cmdYum: yum install
+    cmdApt: apt install
+    cmdWindows: dir
+
+  - installScript:
+    id: 2003
+    title: Script Teste4
+    author: Autor4
+    date: Today4
+    platform: Linux4
+    exploitDB: 1024
+    cmdYum: yum install
+    cmdApt: apt install
+    cmdWindows: dir
