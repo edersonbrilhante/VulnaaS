@@ -3,7 +3,7 @@ package script
 import (
 	"errors"
 
-	"github.com/VulnaaS/VulnaaS-API/config"
+	"github.com/VulnaaS/VulnaaS/config"
 )
 
 // GetByID returns an InstallScript given its ID.
