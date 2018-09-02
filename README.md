@@ -1,5 +1,5 @@
 <p align="center">
-<img src="images/vulnaas-logo.png">
+<img src="images/vulnaas-logo.gif">
 </p>
 
 ## What is VulnaaS?
