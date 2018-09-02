@@ -10,7 +10,7 @@ Developed for use by penetration testers and vulnerability researchers, its main
 
 ## Install a vulnerability? Really?
 
-Yeah, imagine that you are a security researcher and would like to test a recently addded exploit on a Ubuntu VM such as [Drupal < 7.58 / < 8.3.9 / < 8.4.6 / < 8.5.1 - 'Drupalgeddon2' Remote Code Execution]((https://www.exploit-db.com/exploits/44449/)). 
+Yeah, imagine that you are a security researcher and would like to test a recently addded exploit on a Ubuntu VM such as [Drupal < 7.58 / < 8.3.9 / < 8.4.6 / < 8.5.1 - 'Drupalgeddon2' Remote Code Execution](https://www.exploit-db.com/exploits/44449/). 
 
 However, there are a few services that may be installed before installing Drupal:
 * Database (ex: MySQL)
