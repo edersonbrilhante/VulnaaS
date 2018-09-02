@@ -15,6 +15,7 @@ type VulnaasConfiguration struct {
 // required service to be installed.
 type InstallScript struct {
 	ID         int
+	Alias      string
 	Title      string
 	Author     string
 	Date       string
