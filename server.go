@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/VulnaaS/VulnaaS-API/api"
-	"github.com/VulnaaS/VulnaaS-API/config"
+	"github.com/VulnaaS/VulnaaS/api"
+	"github.com/VulnaaS/VulnaaS/config"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/spf13/viper"
