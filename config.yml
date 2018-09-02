@@ -3,62 +3,127 @@ checkPackageManagerScript:
       #!/bin/bash
       which yum 1> /dev/null 
       if [ $? -eq 0 ]; then
-        # curl to API to get yum based scripts.
-        curl -s http://%API_HOST%:%API_PORT%/scripts/yum/%SCRIPT_ID% | sh
+        curl -s http://%API_HOST%:%API_PORT%/scripts/yum/%SCRIPT% | sh
       else
-        # curl to API to get apt-get based scripts.
-        curl -s http://%API_HOST%:%API_PORT%/scripts/apt/%SCRIPT_ID% | sh
+        curl -s http://%API_HOST%:%API_PORT%/scripts/apt/%SCRIPT% | sh
       fi
   windowsCmd: |+ 
-    PS1 script would
-    go here
+    echo "[x][VulnaaS] Hey! We need a Windows config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
+  
+serviceScripts:
+  - installScript:
+    id: 1001
+    alias: php
+    title: PHP
+    author: rafaveira3
+    date: 2018/09/21
+    platform: Linux
+    cmdYum: |+
+      #!/bin/bash
+      echo "[x][VulnaaS][1001][yum] Hey! We need an yum config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
+    cmdApt: |+
+      #!/bin/bash
+      apt-get install php5 libapache2-mod-php5 php5-mcrypt php5-gd php-db php5-mysql -y
+    cmdWindows: |+
+      echo "[x][VulnaaS][1001][win] Hey! We need a Windows config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
+
+  - installScript:
+    id: 1002
+    alias: apache2
+    title: Apache Web Server
+    author: rafaveira3
+    date: 2018/09/21
+    platform: Linux
+    cmdYum: |+
+      #!/bin/bash
+      echo "[x][VulnaaS][1002][yum] Hey! We need an yum config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
+    cmdApt: |+
+      #!/bin/bash
+      apt-get install apache2 -y
+      echo '<IfModule mod_dir.c>' > /etc/apache2/mods-enabled/dir.conf
+      echo '        DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm' >> /etc/apache2/mods-enabled/dir.conf
+      echo '</IfModule>' >>/etc/apache2/mods-enabled/dir.conf
+      service apache2 stop
+      service apache2 start
+    cmdWindows: |+
+      echo "[x][VulnaaS][1002][win] Hey! We need a Windows config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
+  
+  - installScript:
+    id: 1003
+    alias: mysql
+    title: MySQL
+    author: rafaveira3
+    date: 2018/09/21
+    platform: Linux
+    cmdYum: |+
+        #!/bin/bash
+        echo "[x][VulnaaS][1003][yum] Hey! We need an yum config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
+    cmdApt: |+
+      #!/bin/bash    
+      echo 'export MYSQL_ROOT_PASSWORD="root$RANDOM$RANDOM$RANDOM$RANDOM"' > ~/.env
+      echo 'export MYSQL_DATABASE_NAME="db$RANDOM$RANDOM"' >> ~/.env
+      echo 'export MYSQL_DATABASE_ADMIN_USER="user$RANDOM$RANDOM"' >> ~/.env
+      echo 'export MYSQL_DATABASE_ADMIN_PASSWORD="pass$RANDOM$RANDOM$RANDOM$RANDOM"' >> ~/.env
+      . ~/.env
+      echo "[!][VulnaaS][1003] SAVE YOUR MYSQL DATABASE ROOT PASSWORD $MYSQL_ROOT_PASSWORD"
+      echo "[!][VulnaaS][1003] SAVE YOUR MYSQL DATABASE NAME $MYSQL_DATABASE_NAME"
+      echo "[!][VulnaaS][1003] SAVE YOUR MYSQL DATABASE ADMIN USERNAME $MYSQL_DATABASE_ADMIN_USER"
+      echo "[!][VulnaaS][1003] SAVE YOUR MYSQL DATABASE ADMIN PASSWORD $MYSQL_DATABASE_ADMIN_PASSWORD"
+      echo "[!][VulnaaS][1003] I am sleeping for 30 seconds so you can write these down (not in a post-it, please)..."
+      sleep 30
+
+      debconf-set-selections <<< "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD"
+      debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD"
+      apt-get install mysql-server -y
+      mysql_install_db 1> /dev/null
+    
+      mysql -u root -p$MYSQL_ROOT_PASSWORD -e "create database $MYSQL_DATABASE_NAME";
+      mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE USER $MYSQL_DATABASE_ADMIN_USER@localhost IDENTIFIED BY '$MYSQL_DATABASE_ADMIN_PASSWORD'";
+      mysql -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER,CREATE TEMPORARY TABLES,LOCK TABLES ON $MYSQL_DATABASE_NAME.* TO $MYSQL_DATABASE_ADMIN_USER@localhost";
+      mysql -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES";
+
+    cmdWindows: |+
+      echo "[x][VulnaaS][1003][win] Hey! We need a Windows config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
 
 vulnaasScripts: 
   - installScript: 
-    id: 1001
-    title: Script Teste
-    author: Autor1
-    date: Today
+    id: 2001
+    alias: drupal7-58
+    title: Drupal 7.58
+    author: rafaveira3
+    date: 2018/09/21
     platform: Linux
-    exploitDB: 1023
+    exploitDB: 44449
     cmdYum: |+
       #!/bin/bash
-      echo "Need to run yum!"
+      echo "[x][VulnaaS][2001][yum] Hey! We need an yum config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
     cmdApt: |+
       #!/bin/bash
-      echo "Need to run apt!"
-    cmdWindows: dir
+      echo "[!][VulnaaS][2001][apt][BEGIN] Drupal 7.58"
+      
+      echo "[!][VulnaaS][2001][apt] Installing PHP from VulnaaS:"
+      curl -s http://%API_HOST%:%API_PORT%/scripts/apt/php | sh
+        
+      echo "[!][VulnaaS][2001] Installing Apache2 from VulnaaS:" 
+      curl -s http://%API_HOST%:%API_PORT%/scripts/apt/apache2 | sh
+    
+      echo "[!][VulnaaS][2001] Installing MySQL from VulnaaS:"
+      curl -s http://%API_HOST%:%API_PORT%/scripts/apt/mysql -o ~/mysql.sh && chmod +x ~/mysql.sh && ~/mysql.sh
+    
+      echo "[!][VulnaaS][2001] Installing vulnerable Drupal 7.57 from exploit-db:"
+      cd ~
+      wget https://www.exploit-db.com/apps/44dec95a0ef56c4786785f575ac59a60-drupal-7.57.tar.gz -q
+      tar zxf 44dec95a0ef56c4786785f575ac59a60-drupal-7.57.tar.gz 1> /dev/null
+      cd drupal*
+      rm /var/www/html/index.html
+      rsync -avz . /var/www/html
+      mkdir /var/www/html/sites/default/files
+      chmod 777 /var/www/html/sites/default/files/
+      cp /var/www/html/sites/default/default.settings.php /var/www/html/sites/default/settings.php
+      chmod 777 /var/www/html/sites/default/settings.php
+      chown -R :www-data /var/www/html/*
 
-  - installScript: 
-    id: 1002
-    title: Script Teste2
-    author: Autor2
-    date: Today2
-    platform: Linux2
-    exploitDB: 1024
-    cmdYum: yum install
-    cmdApt: apt install
-    cmdWindows: dir
+      echo "[!][VulnaaS][2001][apt][END] Drupal 7.58"
 
-serviceScripts:
-  - installScript:
-    id: 2002
-    title: Script Teste3
-    author: Autor3
-    date: Today3
-    platform: Linux3
-    exploitDB: 10232
-    cmdYum: yum install
-    cmdApt: apt install
-    cmdWindows: dir
-
-  - installScript:
-    id: 2003
-    title: Script Teste4
-    author: Autor4
-    date: Today4
-    platform: Linux4
-    exploitDB: 1024
-    cmdYum: yum install
-    cmdApt: apt install
-    cmdWindows: dir
+    cmdWindows: |+
+      echo "[x][VulnaaS][2001][win] Hey! We need a Windows config for this one! What do you think about contributing to Vulnaas? :) https://github.com/VulnaaS/VulnaaS"
