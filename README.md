@@ -1,5 +1,5 @@
 <p align="center">
-![vulnaas logo](images/vulnaas-banner.png)
+<img src="images/vulnaas-logo.png">
 </p>
 
 ## What is VulnaaS?
