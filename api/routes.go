@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/VulnaaS/VulnaaS-API/config"
-	"github.com/VulnaaS/VulnaaS-API/script"
+	"github.com/VulnaaS/VulnaaS/config"
+	"github.com/VulnaaS/VulnaaS/script"
 	"github.com/labstack/echo"
 )
 
