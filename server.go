@@ -39,8 +39,8 @@ func main() {
 	echoInstance.Use(middleware.RequestID())
 
 	echoInstance.GET("/healthcheck", api.HealthCheck)
-	echoInstance.GET("/install/:id", api.ReceiveInstallRequest)
-	echoInstance.GET("/scripts/:pm/:id", api.InstallScript)
+	echoInstance.GET("/install/:input", api.ReceiveInstallRequest)
+	echoInstance.GET("/scripts/:pm/:input", api.InstallScript)
 
 	vulnaasAPIPort := fmt.Sprintf(":%d", getAPIPort())
 	echoInstance.Logger.Fatal(echoInstance.Start(vulnaasAPIPort))
