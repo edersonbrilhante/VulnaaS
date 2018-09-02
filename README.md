@@ -20,7 +20,7 @@ However, there are a few services that may be installed before installing Drupal
 
 Using [Vagrant](https://www.vagrantup.com/) to provision your box, you can simple add these configuration into your Vagrantfile and let VulnaaS do these tasks for you:
 
-```
+```ruby
 Vagrant.configure("2") do |config|
     config.vm.box = "ubuntu/trusty64"
     
