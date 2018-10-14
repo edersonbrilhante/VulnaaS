@@ -40,6 +40,8 @@ func main() {
 
 	echoInstance.GET("/healthcheck", api.HealthCheck)
 	echoInstance.GET("/install/:input", api.ReceiveInstallRequest)
+
+	echoInstance.GET("/scripts/:type", api.ListScripts)
 	echoInstance.GET("/scripts/:pm/:input", api.InstallScript)
 
 	vulnaasAPIPort := fmt.Sprintf(":%d", getAPIPort())
