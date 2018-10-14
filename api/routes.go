@@ -12,6 +12,12 @@ import (
 	"github.com/labstack/echo"
 )
 
+// ScriptOutput is the struct being used into the output of route /scripts/:type
+type ScriptOutput struct {
+	ID    int
+	Title string
+}
+
 // HealthCheck is the heath check function.
 func HealthCheck(c echo.Context) error {
 	return c.String(http.StatusOK, "WORKING!\n")
@@ -43,6 +49,47 @@ func ReceiveInstallRequest(c echo.Context) error {
 	// ServiceScript ID is hit but Vulnaas do not know the package manager to do the correct redirect.
 	errMsg := fmt.Sprintf("echo \"[x][VulnaaS] %d is a ServiceScript. Use http://%s:%s/scripts/:pm/%d instead.\"", installScript.ID, config.APIhost, config.APIport, installScript.ID)
 	return c.String(http.StatusOK, errMsg)
+}
+
+// ListScripts returns all scripts' title and ID given a type (all, vulnaas and service)
+func ListScripts(c echo.Context) error {
+
+	typeScript := c.Param("type")
+	var scriptInfo ScriptOutput
+	output := []ScriptOutput{}
+
+	switch typeScript {
+	case "all":
+		for _, script := range config.VulnaasConfig.VulnaasScripts {
+			scriptInfo.ID = script.ID
+			scriptInfo.Title = script.Title
+			output = append(output, scriptInfo)
+		}
+		for _, script := range config.VulnaasConfig.ServiceScripts {
+			scriptInfo.ID = script.ID
+			scriptInfo.Title = script.Title
+			output = append(output, scriptInfo)
+		}
+		return c.JSON(http.StatusOK, output)
+	case "vulnaas":
+		for _, script := range config.VulnaasConfig.VulnaasScripts {
+			scriptInfo.ID = script.ID
+			scriptInfo.Title = script.Title
+			output = append(output, scriptInfo)
+		}
+		return c.JSON(http.StatusOK, output)
+	case "services":
+		for _, script := range config.VulnaasConfig.ServiceScripts {
+			scriptInfo.ID = script.ID
+			scriptInfo.Title = script.Title
+			output = append(output, scriptInfo)
+		}
+		return c.JSON(http.StatusOK, output)
+	default:
+		errMsg := fmt.Sprintf("echo \"[x][VulnaaS] Type %s invalid.\"", typeScript)
+		return c.String(http.StatusOK, errMsg)
+	}
+
 }
 
 // InstallScript returns a script based on its ID and its package manager.
